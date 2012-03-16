@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'WWCDjangoMaster.views.home', name='home'),
     # url(r'^WWCDjangoMaster/', include('WWCDjangoMaster.foo.urls')),
+    url(r'^meetup/$', 'meetup.views.index'),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

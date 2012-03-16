@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>meetup</title>
+</head>
+<body>
+{% for group in group_list %}
+  <h1>Meetup Group</h1>
+  <table border=1>
+  {% for attr, value in group.group.attrs %}
+    <tr>
+    <td>{{ attr }}</td>
+    <td>{{ value|safe }}</td>
+    </tr>
+  {% endfor %}
+  </table>
+  {% for event in group.event_list %}
+    <h2>Meetup Event</h2>
+    <table border=1>
+    {% for attr, value in event.event.attrs %}
+      <tr>
+      <td>{{ attr }}</td>
+      <td>{{ value|safe }}</td>
+      </tr>
+    {% endfor %}
+    </table>
+    {% for comment in event.comments %}
+      <h3>Meetup Event Comments</h3>
+      <table border=1>
+      {% for attr, value in comment.attrs %}
+        <tr>
+        <td>{{ attr }}</td>
+        <td>{{ value|safe }}</td>
+        </tr>
+      {% endfor %}
+      </table>
+    {% endfor %}
+  {% endfor %}
+{% endfor %}
+</body>

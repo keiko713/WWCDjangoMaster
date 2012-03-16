@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from django.conf import settings
 from meetup.models import *
@@ -26,11 +26,18 @@ class Meetup:
             }
         )
 
-        response = client.get_events(group_id=group_id)
+        response = client.get_events(
+            group_id=group_id,
+            # this param is for the test of showing past event
+            status='upcoming,past',
+            time='%s,' % (datetime(2012,3,1).strftime('%s' + '000')),
+        )
         for event in response.results:
+            event_id = event.get('id', '')
+
             time = event.get('time', '')
             if time:
-                event_datetime = datetime.datetime.fromtimestamp(int(time)/1000)
+                event_datetime = datetime.fromtimestamp(int(time)/1000)
 
             venue = event.get('venue', '')
             venue_name, venue_address = '', ''
@@ -39,8 +46,8 @@ class Meetup:
                 venue_address = self.get_venue_address(venue)
 
             e, created = MeetupEvent.objects.get_or_create(
-                group_id = g,
-                event_id = event.get('id', ''),
+                group = g,
+                event_id = event_id,
                 defaults = {
                     'name': event.get('name', ''),
                     'rsvpcount': event.get('rsvpcount', ''),
@@ -52,6 +59,19 @@ class Meetup:
                     'event_url': event.get('event_url', ''),
                 }
             )
+
+            response = client.get_event_comments(event_id=event_id, group_id=group_id)
+            for comment in response.results:
+                c, created = MeetupEventComment.objects.get_or_create(
+                    group = g,
+                    event = e,
+                    event_comment_id = comment.get('event_comment_id', ''),
+                    defaults = {
+                        'member_name': comment.get('member_name', ''),
+                        'member_id': comment.get('member_id', ''),
+                        'comment': comment.get('comment', ''),
+                    }
+                )
 
     def get_venue_address(self, venue):
         address_1 = venue.get('address_1', '')
