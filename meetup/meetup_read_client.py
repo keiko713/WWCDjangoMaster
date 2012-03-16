@@ -45,7 +45,12 @@ class Meetup(object):
     def _fetch(self, uri, **url_args):
         args = self.args_str(url_args)
         url = API_BASE_URL + uri + '/' + "?" + args
-        print url
+        logging.debug("requesting %s" % (url))
+        return parse_json(self.opener.open(url).read())
+
+    def _fetch_with_id(self, uri, id, **url_args):
+        args = self.args_str(url_args)
+        url = API_BASE_URL + uri + '/' + id + "?" + args
         logging.debug("requesting %s" % (url))
         return parse_json(self.opener.open(url).read())
 
@@ -84,6 +89,24 @@ for method, uri in READ_METHODS.items():
     read_method = types.MethodType(_generate_read_method(uri), None, Meetup)
     setattr(Meetup, 'get_' + method, read_method)
 
+READ_METHODS_WITH_ID = {
+    # events
+    'event': '2/event',
+    # members
+    'member': '2/member',
+    # rsvps
+    'rsvp': '2/rsvp',
+}
+def _generate_read_method_with_id(uri):
+    def read_method(self, id, **args):
+        # TODO need some validation to make sure that id is given
+        return self._fetch_with_id(uri, id, **args)
+    return read_method
+
+for method, uri in READ_METHODS_WITH_ID.items():
+    read_method = types.MethodType(_generate_read_method_with_id(uri), None, Meetup)
+    setattr(Meetup, 'get_' + method, read_method)
+
 
 class NoToken(Exception):
     def __init__(self, description):
@@ -103,6 +126,7 @@ class API_Response(object):
 
     def __str__(self):
         return 'meta: ' + str(self.meta) + '\n' + str(self.results)
+
 
 ########################################
 
