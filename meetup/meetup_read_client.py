@@ -53,12 +53,27 @@ class Meetup(object):
 Add read methods to Meetup class dynamically (avoiding boilerplate)
 """
 READ_METHODS = {
-    'groups': '2/groups',
+    # checkins
+    'checkins': '2/checkins',
+    # events
+    'open_events': '2/oven_events',
     'events': '2/events',
     'event_comments': '2/event_comments',
+    'event_ratings': '2/event_ratings',
+    # groups
+    'groups': '2/groups',
+    # members
     'members': '2/members',
+    'profiles': '2/profiles',
+    # photos
+    'photo_comments': '2/photo_comments',
+    'photo_albums': '2/photo_albums',
+    'photos': '2/photos',
+    # rsvps
     'rsvps': '2/rsvps',
-    'photos': '2/photos'
+    # venues
+    'open_venues': '2/open_venues',
+    'venues': '2/venues',
 }
 def _generate_read_method(uri):
     def read_method(self, **args):
