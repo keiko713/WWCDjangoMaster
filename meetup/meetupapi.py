@@ -50,8 +50,8 @@ class Meetup:
                 event_id = event_id,
                 defaults = {
                     'name': event.get('name', ''),
-                    'rsvpcount': event.get('rsvpcount', ''),
-                    'rsvpable': event.get('rsvpable', ''),
+                    'status': event.get('status', ''),
+                    'yes_rsvp_count': event.get('yes_rsvp_count', ''),
                     'time': event_datetime if time else None,
                     'description': event.get('description', ''),
                     'venue_name': venue_name,
