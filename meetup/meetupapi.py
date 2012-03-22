@@ -1,13 +1,13 @@
 from datetime import datetime
 
-from django.conf import settings
 from meetup.models import *
 from meetup.meetup_read_client import Meetup as MeetupClient
+import apikeys
 
 class Meetup:
     def update_wwc(self, *args, **kwargs):
-        client = MeetupClient(settings.MEETUP_API_KEY)
-        group_id = settings.MEETUP_WWC_GROUP_ID
+        client = MeetupClient(apikeys.MEETUP_API_KEY)
+        group_id = apikeys.MEETUP_WWC_GROUP_ID
 
         response = client.get_groups(group_id=group_id)
         group = response.results[0]
